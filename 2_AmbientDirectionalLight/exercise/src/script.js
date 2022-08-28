@@ -22,49 +22,45 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
 scene.add(ambientLight)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.01).name('ambientLight')
 
-/*
-const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3)
+const directionalLight = new THREE.DirectionalLight('gold', 0.3)
 directionalLight.position.set(1,0.25,0)
 scene.add(directionalLight)
 gui.add(directionalLight, 'intensity').min(0).max(1).step(0.01).name('directionalLight')
 
-const hemisphereLight = new THREE.HemisphereLight(0xff0000, 0x0000ff, 0.3)
-scene.add(hemisphereLight)
-gui.add(hemisphereLight, 'intensity').min(0).max(1).step(0.01).name('hemisphereLight')
-*/
-/**
- * Objects
- */
-// Material
 const material = new THREE.MeshStandardMaterial()
 material.roughness = 0.4
 
 // Objects
+// Sphere
 const sphere = new THREE.Mesh(
     new THREE.SphereGeometry(0.5, 32, 32),
     material
 )
 sphere.position.x = - 1.5
 
+// Cube
 const cube = new THREE.Mesh(
     new THREE.BoxGeometry(0.75, 0.75, 0.75),
     material
 )
+cube.position.x = 0.5
 
-const torus = new THREE.Mesh(
-    new THREE.TorusGeometry(0.3, 0.2, 32, 64),
+// Capsule
+const capsule = new THREE.Mesh(
+    new THREE.CapsuleGeometry(0.25, 0.5, 64,128), // *4
     material
 )
-torus.position.x = 1.5
+capsule.position.x = 2.5
 
-const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(5, 5),
+// Donut
+const donut = new THREE.Mesh(
+    new THREE.TorusGeometry(0.6, 0.075, 64, 128), // ,,16,32
     material
 )
-plane.rotation.x = - Math.PI * 0.5
-plane.position.y = - 0.65
+donut.position.x = 2.5
+donut.rotation.x = 1
 
-scene.add(sphere, cube, torus, plane)
+scene.add(sphere, cube, capsule, donut)
 
 /**
  * Sizes
@@ -96,7 +92,7 @@ window.addEventListener('resize', () =>
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 1
 camera.position.y = 1
-camera.position.z = 2
+camera.position.z = 5
 scene.add(camera)
 
 // Controls
@@ -122,14 +118,12 @@ const tick = () =>
     const elapsedTime = clock.getElapsedTime()
 
     // Update objects
-    sphere.rotation.y = 0.1 * elapsedTime
-    cube.rotation.y = 0.1 * elapsedTime
-    torus.rotation.y = 0.1 * elapsedTime
-
     sphere.rotation.x = 0.15 * elapsedTime
+    sphere.rotation.y = 0.1 * elapsedTime
     cube.rotation.x = 0.15 * elapsedTime
-    torus.rotation.x = 0.15 * elapsedTime
-
+    cube.rotation.y = 0.1 * elapsedTime
+    donut.rotation.x = elapsedTime * 2
+    
     // Update controls
     controls.update()
 
@@ -139,5 +133,4 @@ const tick = () =>
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
-
 tick()
