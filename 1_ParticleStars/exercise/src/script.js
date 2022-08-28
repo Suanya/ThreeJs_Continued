@@ -1,14 +1,10 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import * as dat from 'lil-gui'
 
 /**
  * Base
  */
-// Debug
-const gui = new dat.GUI()
-
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -30,12 +26,12 @@ const particlesGeometry = new THREE.BufferGeometry(1,32,32)
 const count = 5000
 
 const positions = new Float32Array(count * 3)
-const colors = new Float32Array(count * 3)
+//const colors = new Float32Array(count * 3)
 
 for(let i = 0; i < count * 3; i++)
 {
     positions[i] = (Math.random() - 0.5) * 10
-    colors[i] = Math.random()
+    //colors[i] = Math.random()
 }
 
 particlesGeometry.setAttribute(
@@ -43,37 +39,20 @@ particlesGeometry.setAttribute(
     new THREE.BufferAttribute(positions, 3)
 )
 
-particlesGeometry.setAttribute(
-    'color',
-    new THREE.BufferAttribute(colors, 3)
-)
-
 // Material
 const particlesMaterial = new THREE.PointsMaterial()
 particlesMaterial.size = 0.1
 particlesMaterial.sizeAttenuation = true
-//particlesMaterial.color = new THREE.Color('#ffff00')
+particlesMaterial.map = particleTexture
+particlesMaterial.color = new THREE.Color('gold')
 particlesMaterial.transparent = true
 particlesMaterial.alphaMap = particleTexture
-// particlesMaterial.alphaTest = 0.001
-// particlesMaterial.depthTest = false
-particlesMaterial.depthWrite = false
+particlesMaterial.alphaTest = 0.001
 particlesMaterial.blending = THREE.AdditiveBlending
-particlesMaterial.vertexColors = true
-
 
 // Points
 const particles = new THREE.Points(particlesGeometry, particlesMaterial)
 scene.add(particles)
-
-/*
-// MagicCube
-const cube = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(),
-    new THREE.MeshBasicMaterial()
-)
-scene.add(cube)
-*/
 
 /**
  * Sizes
@@ -129,22 +108,9 @@ const tick = () =>
     const elapsedTime = clock.getElapsedTime()
     
     // Update particles
-    // particles.rotation.y = elapsedTime * 0.0075
-    // particles.rotation.x = elapsedTime
-    // particles.rotation.z = elapsedTime
-    
-    /*
-    for(let i = 0; i < count; i++)
-    {
-        const i3 = i * 3
-        
-        const x = particlesGeometry.attributes.position.array[i3 + 0]
-        
-        particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(elapsedTime + x)
-    }
-
-    particlesGeometry.attributes.position.needsUpdate = true
-    */
+    particles.rotation.y = elapsedTime * 0.0075
+    particles.rotation.x = elapsedTime * -0.0025
+   
     // Update controls
     controls.update()
 
