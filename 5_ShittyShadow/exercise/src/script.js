@@ -34,15 +34,12 @@ scene.add(directionalLight)
 
 directionalLight.castShadow = true
 
-/*
-directionalLight.shadow.mapSize.with = 1024
-directionalLight.shadow.mapSize.height = 1024
-*/
 /**
  * Materials
  */
 const material = new THREE.MeshStandardMaterial()
 material.roughness = 0.7
+material.color = new THREE.Color(0xF7D5E0)
 gui.add(material, 'metalness').min(0).max(1).step(0.001)
 gui.add(material, 'roughness').min(0).max(1).step(0.001)
 
@@ -63,6 +60,7 @@ const cube = new THREE.Mesh(
     material
 )
 cube.position.x = 0.5
+cube.castShadow = true
 
 // Capsule
 const capsule = new THREE.Mesh(
@@ -70,6 +68,7 @@ const capsule = new THREE.Mesh(
     material
 )
 capsule.position.x = 2.5
+capsule.castShadow = true
 
 // Donut
 const donut = new THREE.Mesh(
@@ -78,6 +77,7 @@ const donut = new THREE.Mesh(
 )
 donut.position.x = 2.5
 donut.rotation.x = 1
+donut.castShadow = true
 
 
 const plane = new THREE.Mesh(
@@ -121,7 +121,7 @@ window.addEventListener('resize', () =>
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 1
 camera.position.y = 1
-camera.position.z = 2
+camera.position.z = 5
 scene.add(camera)
 
 // Controls
@@ -164,5 +164,4 @@ const tick = () =>
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
-
 tick()
