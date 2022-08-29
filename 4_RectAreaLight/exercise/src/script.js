@@ -1,11 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import * as dat from 'lil-gui'
-import {color, position, roughness} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
-import {CSS3DObject} from "three/examples/jsm/renderers/CSS3DRenderer";
-import {BoundingBox} from "three/examples/jsm/libs/opentype.module";
-
 
 /**
  * Base
@@ -17,116 +12,41 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 /**
- * Debug
+ * Lights
  */
-const gui = new dat.GUI({ closed: true, width: 400 })
+const rectArealLightCube = new THREE.RectAreaLight(0xED3080, 2, 1, 1)
+rectArealLightCube.position.set(0.5, -0.5, 1)
+scene.add(rectArealLightCube)
 
+const rectArealLightSphere = new THREE.RectAreaLight(0x4e00ff, 2, 1, 1)
+rectArealLightSphere.position.set(- 1.5, -0.5, 1)
+scene.add(rectArealLightSphere)
 
-/**
- * Textures
- */
-const textureLoader = new THREE.TextureLoader()
-const cubeTextureLoader = new THREE.CubeTextureLoader()
-
-const doorColorTexture = textureLoader.load('/textures/door/color.jpg')
-const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg')
-const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
-const doorHeightTexture = textureLoader.load('/textures/door/height.jpg')
-const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg')
-const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
-const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
-const matcapTexture = textureLoader.load('/textures/matcaps/9.png')
-
-const gradientTexture = textureLoader.load('/textures/gradients/3.jpg')
-gradientTexture.minFilter = THREE.NearestFilter
-gradientTexture.magFilter = THREE.NearestFilter
-gradientTexture.generateMipmaps = false
-
-const environmentMapTexture  = cubeTextureLoader.load([
-    '/textures/environmentMaps/0/px.jpg',
-    '/textures/environmentMaps/0/nx.jpg',
-    '/textures/environmentMaps/0/py.jpg',
-    '/textures/environmentMaps/0/ny.jpg',
-    '/textures/environmentMaps/0/pz.jpg',
-    '/textures/environmentMaps/0/nz.jpg'
-])
+const rectArealLightCapsule = new THREE.RectAreaLight(0x4e00ff, 2, 1, 1)
+rectArealLightCapsule.position.set(2.5, -0.5, 1)
+scene.add(rectArealLightCapsule)
 
 /**
  * Objects
  */
 // Material
-    
-// const material = new THREE.MeshBasicMaterial()
-// material.map = doorAmbientOcclusionTexture
-// material.color = new THREE.Color('gold')
-// material.wireframe = true
-// material.opacity = 0.5
-// material.transparent = true
-// material.alphaMap = doorAlphaTexture
-// material.side = THREE.FrontSide
-// material.side = THREE.BackSide
-// material.side = THREE.DoubleSide
-
-// const material = new THREE.MeshNormalMaterial()
-// material.flatShading = true
-    
-// const material = new THREE.MeshMatcapMaterial()
-// material.matcap = matcapTexture
-    
-// const material = new THREE.MeshDepthMaterial()
-    
-// const material = new THREE.MeshLambertMaterial()
-
-// const material = new THREE.MeshPhongMaterial()
-// material.shininess = 100
-// material.specular = new THREE.Color(0x1188ff)
-    
-// const material = new THREE.MeshToonMaterial()   
-// material.gradientMap = gradientTexture
-
-/*
 const material = new THREE.MeshStandardMaterial()
-material.metalness = 0
-material.roughness = 1
-material.map = doorColorTexture
-material.aoMap = doorAmbientOcclusionTexture
-material.aoMapIntensity = 1
-material.displacementMap = doorHeightTexture
-material.displacementScale = 0.05
-material.metalnessMap = doorMetalnessTexture
-material.roughnessMap = doorRoughnessTexture
-material.normalMap = doorNormalTexture
-material.normalScale.set(0.5,0.5)
-material.transparent = true
-material.alphaMap = doorAlphaTexture
-*/
+material.roughness = 0.4
 
-const material = new THREE.MeshStandardMaterial()
-material.metalness = 0.7
-material.roughness = 0.2
-material.envMap = environmentMapTexture
-
-gui.add(material, 'metalness').min(0).max(1).step(0.0001)
-gui.add(material, 'roughness').min(0).max(1).step(0.0001)
-gui.add(material, 'aoMapIntensity').min(0).max(10).step(0.0001)
-gui.add(material, 'displacementScale').min(0).max(10).step(0.0001)
-
+// Objects
 // Sphere
 const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(0.5,64,64), // (,...,16,16)
+    new THREE.SphereGeometry(0.5, 32, 32),
     material
 )
-sphere.position.x = -1.5
-sphere.geometry.setAttribute('uv2', new THREE.BufferAttribute(sphere.geometry.attributes.uv.array, 2))
+sphere.position.x = - 1.5
 
-// Plane
-const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(1, 1, 100, 100),
+// Cube
+const cube = new THREE.Mesh(
+    new THREE.BoxGeometry(0.75, 0.75, 0.75),
     material
 )
-plane.geometry.setAttribute('uv2', new THREE.BufferAttribute(plane.geometry.attributes.uv.array, 2))
-material.side = THREE.DoubleSide
-plane.position.x = 0.5
+cube.position.x = 0.5
 
 // Capsule
 const capsule = new THREE.Mesh(
@@ -134,7 +54,6 @@ const capsule = new THREE.Mesh(
     material
 )
 capsule.position.x = 2.5
-capsule.geometry.setAttribute('uv2', new THREE.BufferAttribute(capsule.geometry.attributes.uv.array, 2))
 
 // Donut
 const donut = new THREE.Mesh(
@@ -143,23 +62,16 @@ const donut = new THREE.Mesh(
 )
 donut.position.x = 2.5
 donut.rotation.x = 1
-donut.geometry.setAttribute('uv2', new THREE.BufferAttribute(donut.geometry.attributes.uv.array, 2))
 
-// Add objects to the scene
-scene.add(sphere, plane, capsule, donut)
+const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(8, 5),
+    material
+)
+plane.rotation.x = - Math.PI * 0.5
+plane.position.y = - 0.65
+plane.position.z = 2
 
-/**
- * Lights
- */
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
-scene.add(ambientLight)
-
-const pointLight = new THREE.PointLight(0xffffff, 0.5)
-pointLight.position.x = 2
-pointLight.position.y = 3
-pointLight.position.z = 4
-scene.add(pointLight)
-
+scene.add(sphere, cube, capsule, donut, plane)
 
 /**
  * Sizes
@@ -191,7 +103,7 @@ window.addEventListener('resize', () =>
 const camera = new THREE.PerspectiveCamera(140, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 1
 camera.position.y = 1
-camera.position.z = 2
+camera.position.z = 3
 scene.add(camera)
 
 // Controls
@@ -216,15 +128,13 @@ const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
 
-    
     // Update objects
-    sphere.rotation.x = elapsedTime * 1.6
-    sphere.rotation.y = elapsedTime * 1.6
-    plane.rotation.y = elapsedTime * 1
-    capsule.rotation.y = elapsedTime * 1.6
-    donut.rotation.z = elapsedTime * 2
+    sphere.rotation.x = 0.15 * elapsedTime
+    sphere.rotation.y = 0.1 * elapsedTime
+    cube.rotation.x = 0.15 * elapsedTime
+    cube.rotation.y = 0.1 * elapsedTime
     donut.rotation.x = elapsedTime * 2
-    
+
     // Update controls
     controls.update()
 
@@ -234,60 +144,4 @@ const tick = () =>
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
-
 tick()
-
-
-
-
-/**
- * ShoeBox
- */
-/*
-// Ground
-const ground = new THREE.Mesh(
-    new  THREE.PlaneGeometry(5, 3),
-    material
-)
-ground.rotation.x = Math.PI * 0.5
-ground.position.y = - 1.0
-
-// Roof
-const roof = new THREE.Mesh(
-    new  THREE.PlaneGeometry(5, 3),
-    material
-)
-roof.rotation.x = Math.PI * 0.5
-roof.position.y =  2
-
-// BackWall
-const wall = new THREE.Mesh(
-    new  THREE.PlaneGeometry(5, 3),
-    material
-)
-wall.position.z = - 1.5
-wall.position.y = 0.5
-
-
-// LeftWall
-const leftWall = new THREE.Mesh(
-    new  THREE.PlaneGeometry(3, 3),
-    material
-)
-leftWall.position.y = 0.5
-leftWall.position.x = - 2.5
-leftWall.rotation.y = Math.PI * 2.5
-
-// RightWall
-const rightWall = new THREE.Mesh(
-    new  THREE.PlaneGeometry(3, 3),
-    material
-)
-rightWall.position.y = 0.5
-rightWall.position.x = 2.5
-rightWall.rotation.y = Math.PI * 2.5
-
-// Add shoeBox
-// scene.add(ground, wall, roof, leftWall, rightWall)
-
- */
