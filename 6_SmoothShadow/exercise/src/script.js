@@ -42,9 +42,9 @@ directionalLight.shadow.camera.bottom = -2
 directionalLight.shadow.camera.left = -2
 directionalLight.shadow.camera.near = 1
 directionalLight.shadow.camera.far = 9
-// directionalLight.shadow.camera.radius = 10
 
 const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
+directionalLightCameraHelper.visible = true
 scene.add(directionalLightCameraHelper)
 
 /**
@@ -91,8 +91,6 @@ const donut = new THREE.Mesh(
 donut.position.x = 2.5
 donut.rotation.x = 1
 donut.castShadow = true
-
-
 
 const plane = new THREE.Mesh(
     new THREE.PlaneGeometry(8, 4),
@@ -152,7 +150,7 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 renderer.shadowMap.enabled = true
-//renderer.shadowMap.type = THREE.PCFSoftShadowMap
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 /**
  * Animate
@@ -179,5 +177,4 @@ const tick = () =>
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
-
 tick()
