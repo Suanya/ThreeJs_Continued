@@ -4,23 +4,11 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
-// import {position} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
 import firefliesVertexShader from './shaders/fireflies/vertex.glsl'
 import firefliesFragmentShader from './shaders/fireflies/fragment.glsl'
 import portalVertexShader from './shaders/portal/vertex.glsl'
 import portalFragmentShader from './shaders/portal/fragment.glsl'
 
-
-
-
-/**
- * Spector JS
- */
-/*
-const SPECTOR = require('spectorjs')
-const spector = new SPECTOR.Spector()
-spector.displayUI()
-*/
 
 /**
  * Base
@@ -65,11 +53,12 @@ bakedTexture.encoding = THREE.sRGBEncoding
 const bakedMaterial = new THREE.MeshBasicMaterial( { map: bakedTexture })
 
 // Pole Light Material
-const poleLightMaterial = new THREE.MeshBasicMaterial( { color: 0xffe50e} )
+const poleLightMaterial = new THREE.MeshBasicMaterial( { color: 'gold'} )
 
 // Portal light material
-debugObject.portalColorStart = '#ffff00'
-debugObject.portalColorEnd = '#0000ff'
+debugObject.portalColorStart = '#ED3080'
+debugObject.portalColorEnd = '#000000'
+
 
 gui
     .addColor(debugObject, 'portalColorStart')
@@ -77,6 +66,7 @@ gui
     {
         portalLightMaterial.uniforms.uColorStart.value.set(debugObject.portalColorStart)
     })
+    .name('Inner Color')
 
 gui
     .addColor(debugObject, 'portalColorEnd')
@@ -84,20 +74,19 @@ gui
     {
         portalLightMaterial.uniforms.uColorEnd.value.set(debugObject.portalColorEnd)
     })
+    .name('Outer Color')
 
-//const portalLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffe50e, side: THREE.DoubleSide} )
 const portalLightMaterial = new THREE.ShaderMaterial({
     uniforms:
         {
             uTime: { value: 0 },
-            uColorStart: { value: new THREE.Color( 0xffff00) },
-            uColorEnd: { value: new THREE.Color (0x0000ff)}
+            uColorStart: { value: new THREE.Color( 0xED3080) },
+            uColorEnd: { value: new THREE.Color (0x000000)}
         },
     vertexShader: portalVertexShader,
-    fragmentShader: portalFragmentShader
+    fragmentShader: portalFragmentShader,
+    side: THREE.DoubleSide
 })
-
-
 
 /**
  * Model
@@ -106,13 +95,6 @@ gltfLoader.load(
     '/draco/myPortal.glb',
     (gltf) =>
     {
-        /*
-        gltf.scene.traverse((child) =>
-        {   console.log(child)
-            child.material = bakedMaterial
-        })
-       */
-        
         // Get each object
         const bakedMesh = gltf.scene.children.find((child) => child.name === 'baked')
         const portalLightMesh = gltf.scene.children.find((child) => child.name === 'Disco')
@@ -140,18 +122,15 @@ const scaleArray = new Float32Array(firefliesCount)
 
 for(let i = 0; i < firefliesCount; i++)
 {
-    positionArray[i * 3 + 0] = (Math.random() - 0.5) * 6
+    positionArray[i * 3] = (Math.random() - 0.5) * 6
     positionArray[i * 3 + 1] = Math.random() * 2
     positionArray[i * 3 + 2] = (Math.random() - 0.5) * 4
-    
     scaleArray[i] = Math.random()
 }
 firefliesGeometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3))
 firefliesGeometry.setAttribute('aScale', new THREE.BufferAttribute(positionArray, 1))
 
 // Material
-// const firefliesMaterial = new THREE.PointsMaterial({ size: 0.1, sizeAttenuation: true })
-
 const firefliesMaterial = new THREE.ShaderMaterial({
     uniforms:
         {
@@ -166,14 +145,10 @@ const firefliesMaterial = new THREE.ShaderMaterial({
     blending: THREE.AdditiveBlending,
     depthWrite: false
 })
-gui.add(firefliesMaterial.uniforms.uSize, 'value').min(0).max(50).step(1).name('firefliesSize')
-
 
 // Points
 const fireflies = new THREE.Points(firefliesGeometry, firefliesMaterial)
 scene.add(fireflies)
-
-
 
 /**
  * Sizes
@@ -226,16 +201,6 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.outputEncoding = THREE.sRGBEncoding
 
-// Debug
-debugObject.clearColor = '#000000' //#220334
-renderer.setClearColor(debugObject.clearColor)
-gui
-    .add(debugObject, 'clearColor')
-    .onChange(() =>
-    {
-        renderer.setClearColor((debugObject.clearColor))
-    })
- 
 /**
  * Animate
  */
@@ -258,5 +223,4 @@ const tick = () =>
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
-
 tick()
