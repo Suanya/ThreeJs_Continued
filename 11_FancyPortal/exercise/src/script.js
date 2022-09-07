@@ -42,7 +42,7 @@ gltfLoader.setDRACOLoader(dracoLoader)
 /**
  * Textures
  */
-const bakedTexture = textureLoader.load('/draco/myBaked.jpg')
+const bakedTexture = textureLoader.load('myBaked.jpg')
 bakedTexture.flipY = false
 bakedTexture.encoding = THREE.sRGBEncoding
 
@@ -92,7 +92,7 @@ const portalLightMaterial = new THREE.ShaderMaterial({
  * Model
  */
 gltfLoader.load(
-    '/draco/myPortal.glb',
+    'myPortal.glb',
     (gltf) =>
     {
         // Get each object
