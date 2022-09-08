@@ -1,5 +1,4 @@
 import './style.css'
-import * as dat from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
@@ -7,17 +6,9 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import vertexShader from './shaders/vertex.glsl'
 import fragmentShader from './shaders/fragment.glsl'
 
-console.log(vertexShader)
-console.log(fragmentShader)
-
 /**
  * Base
  */
-// Debug
-const gui = new dat.GUI({
-    width: 400
-})
-
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -49,7 +40,6 @@ const rawModelMaterial = new THREE.ShaderMaterial({
 /**
  * Model
  */
-
 gltfLoader.load(
     'myportal.glb',
     (gltf) =>
@@ -90,7 +80,7 @@ window.addEventListener('resize', () =>
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(65, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 4
 camera.position.y = 2
 camera.position.z = 4
