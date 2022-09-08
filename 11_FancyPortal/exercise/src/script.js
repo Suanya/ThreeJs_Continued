@@ -92,7 +92,7 @@ const portalLightMaterial = new THREE.ShaderMaterial({
  * Model
  */
 gltfLoader.load(
-    'myPortal.glb',
+    'myportal.glb',
     (gltf) =>
     {
         // Get each object
