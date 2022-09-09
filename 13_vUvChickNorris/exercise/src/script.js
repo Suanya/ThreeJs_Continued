@@ -4,6 +4,8 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+import fragmentShader from './shaders/fragment.glsl'
+import vertexShader from './shaders/vertex.glsl'
 
 /**
  * Base
@@ -34,14 +36,30 @@ const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
 
 /**
- * Object
+ * Material
  */
-const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial()
-)
+const rawModelMaterial = new THREE.ShaderMaterial({
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader
+})
 
-scene.add(cube)
+/**
+ * Model
+ */
+gltfLoader.load(
+    'ChickNorris_Web.glb',
+    (gltf) =>
+    {
+        gltf.scene.traverse((child) =>
+        {
+            child.material = rawModelMaterial
+        })
+        gltf.scene.scale.set(0.5, 0.5, 0.5)
+        gltf.scene.position.set(0, -2, 0)
+        gltf.scene.rotation.y = Math.PI
+        scene.add(gltf.scene)
+    }
+)
 
 /**
  * Sizes
@@ -70,7 +88,7 @@ window.addEventListener('resize', () =>
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(65, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 4
 camera.position.y = 2
 camera.position.z = 4
@@ -108,5 +126,4 @@ const tick = () =>
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
-
 tick()
