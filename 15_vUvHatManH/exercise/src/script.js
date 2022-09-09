@@ -1,5 +1,4 @@
 import './style.css'
-import * as dat from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
@@ -10,11 +9,6 @@ import vertexShader from './shaders/vertex.glsl'
 /**
  * Base
  */
-// Debug
-const gui = new dat.GUI({
-    width: 400
-})
-
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -54,11 +48,11 @@ gltfLoader.load(
         {
             child.material = rawModelMaterial
         })
-        gltf.scene.scale.set(1, 1, 1)
+        gltf.scene.scale.set(1.2, 1.2, 1.2)
         gltf.scene.position.set(0, 0, 0)
-        gltf.scene.rotation.y = Math.PI
+        gltf.scene.rotation.y = Math.PI * 0.5
+        gltf.scene.rotation.z = Math.PI * -0.04
         scene.add(gltf.scene)
-        console.log(gltf)
     }
 )
 
@@ -127,5 +121,4 @@ const tick = () =>
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
-
 tick()
