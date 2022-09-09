@@ -88,6 +88,7 @@ export default class Environment
         }
         this.environmentMap.updateMaterial()
         
+        
         // Debug
         if(this.debug.active)
         {

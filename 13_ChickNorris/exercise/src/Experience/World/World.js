@@ -3,6 +3,7 @@ import Experience from "../Experience.js";
 import Environment from "./Environment.js";
 import Floor from "./Floor";
 import Fox from "./Fox";
+import ChickNorris from "./ChickNorris";
 
 
 export default class World
@@ -23,6 +24,7 @@ export default class World
             // Set Up
             this.floor = new Floor()
             this.fox = new Fox()
+            this.chickNorris = new ChickNorris()
             this.environment = new Environment()
            
         })
