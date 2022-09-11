@@ -3,8 +3,6 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
-import fragmentShader from './shaders/fragment.glsl'
-import vertexShader from './shaders/vertex.glsl'
 
 /**
  * Base
@@ -32,21 +30,19 @@ gltfLoader.setDRACOLoader(dracoLoader)
 /**
  * Material
  */
-const rawModelMaterial = new THREE.ShaderMaterial({
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader
-})
+const normalMaterial = new THREE.MeshNormalMaterial()
+normalMaterial.side = THREE.DoubleSide
 
 /**
  * Model
  */
 gltfLoader.load(
-    'HatMan_Web2.glb',
+    'HatMan_Web3_UVNormals.glb',
     (gltf) =>
     {
         gltf.scene.traverse((child) =>
         {
-            child.material = rawModelMaterial
+            child.material = normalMaterial
         })
         gltf.scene.scale.set(1.2, 1.2, 1.2)
         gltf.scene.position.set(0, 0, 0)
